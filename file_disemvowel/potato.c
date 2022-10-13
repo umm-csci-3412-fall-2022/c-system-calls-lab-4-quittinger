@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#define BUF_SIZE 1024
+#define BUF_SIZE 7
 
 
 
@@ -23,7 +23,9 @@ int main(int argc, char *argv[]) {
     while(nchar != 0){
         nchar = fread(buffer, sizeof(char), BUF_SIZE, inputFile);
 	fwrite(buffer, sizeof(char), nchar, outputFile);
-	fseek(inputFile, 0, SEEK_CUR);
+	fflush(inputFile);
+	fflush(outputFile);
+	//fseek(inputFile, 0, SEEK_CUR);
 	printf("\n%d\n", nchar);   
     
     }

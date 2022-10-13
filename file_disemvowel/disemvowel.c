@@ -43,8 +43,6 @@ int copy_non_vowels(int num_chars, char* in_buf, char* out_buf) {
 
 
 void disemvowel(FILE* inputFile, FILE* outputFile) {
-   FILE *fp;
-   FILE *of;
 
       	/*
      * Copy all the non-vowels from inputFile to outputFile.
@@ -55,18 +53,17 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
       char out_buf[BUF_SIZE];
       char in_buf[BUF_SIZE];
       int nchar;
-      of = fopen(outputFile, "w+");
-      fp = fopen(inputFile, "w+");
-      nchar = fread(in_buf,BUF_SIZE,1,fp);
+      nchar = fread(in_buf,sizeof(char),BUF_SIZE,inputFile);
       while(nchar != 0){
         int output = copy_non_vowels(nchar, in_buf, out_buf);
-        fwrite(out_buf,output,1,of);
-        fflush(inputFile);
-        fflush(outputFile);
-        fseek(fp,0,SEEK_CUR);
-        nchar = fread(in_buf,BUF_SIZE,1,fp);
+        fwrite(out_buf,sizeof(char),output,outputFile);
+       // fflush(inputFile);
+       // fflush(outputFile);
+       // fseek(inputFile,0,SEEK_CUR);
+        nchar = fread(in_buf,sizeof(char),BUF_SIZE,inputFile);
       }
-
+        fclose(inputFile);
+	fclose(outputFile);
 
 }
 
@@ -74,18 +71,22 @@ int main(int argc, char *argv[]) {
     // This sets these to `stdin` and `stdout` by default.
     // You then need to set them to user specified files when the user
     // provides files names as command line arguments.
+        FILE *inputFile;
+        FILE *outputFile;
 
 
+    if(argc == 1){
+    	inputFile = stdin;
+    	outputFile = stdout;
 
-
-    FILE *inputFile = stdin;
-    FILE *outputFile = stdout;
-
+    }
     if(argc == 2){
-            inputFile = argv[1];
+            inputFile =fopen(argv[1], "r+");
+	    outputFile = stdout;
     }
     if(argc == 3){
-            inputFile = argv[1];
+            inputFile = fopen(argv[1], "r+");
+	    outputFile = fopen(argv[2], "w+");
     }
     // Code that processes the command line arguments
     // and sets up inputFile and outputFile.
