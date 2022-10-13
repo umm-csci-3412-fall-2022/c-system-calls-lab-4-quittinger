@@ -8,8 +8,21 @@
 
 static int num_dirs, num_regular;
 
+
 bool is_dir(const char* path) {
-  /*
+struct stat buf;
+
+stat(path, &buf);
+
+switch(buf.st_mode & S_IFMT){
+	case S_IFDIR: printf("Directory\n "); break;
+	case S_IFREG: printf("File\n"); break;
+	default: printf("What the fuck, are we, doing\n"); break;
+}
+
+return false;
+      
+	/*
    * Use the stat() function (try "man 2 stat") to determine if the file
    * referenced by path is a directory or not.  Call stat, and then use
    * S_ISDIR to see if the file is a directory. Make sure you check the
@@ -43,6 +56,8 @@ void process_file(const char* path) {
    * Update the number of regular files.
    * This is as simple as it seems. :-)
    */
+
+	++num_regular;
 }
 
 void process_path(const char* path) {
