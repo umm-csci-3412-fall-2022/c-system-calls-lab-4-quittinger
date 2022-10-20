@@ -10,54 +10,56 @@ static int num_dirs, num_regular;
 
 
 bool is_dir(const char* path) {
+//Create buf structure for the function stat
 struct stat buf;
 
-stat(path, &buf);
-
+// Use the output of stat to make sure there isn't a failure
+int check = stat(path, &buf);
+if (check == 0){
+// The switch statement checks for if its a directory
+// Or if its a file, then returns the corresponding boolean
 switch(buf.st_mode & S_IFMT){
-	case S_IFDIR: printf("Directory\n "); break;
-	case S_IFREG: printf("File\n"); break;
-	default: printf("What the fuck, are we, doing\n"); break;
+	case S_IFDIR: return true; break;
+	case S_IFREG: return false; break;
+	default: return false; break; 	      
 }
-
+}
+else{
+// If the check integer returns -1, this becomes false
 return false;
+}
       
-	/*
-   * Use the stat() function (try "man 2 stat") to determine if the file
-   * referenced by path is a directory or not.  Call stat, and then use
-   * S_ISDIR to see if the file is a directory. Make sure you check the
-   * return value from stat() in case there is a problem, e.g., maybe the
-   * the file doesn't actually exist.
-   */
 }
 
-/* 
- * I needed this because the multiple recursion means there's no way to
- * order them so that the definitions all precede the cause.
- */
 void process_path(const char*);
 
 void process_directory(const char* path) {
-  /*
-   * Update the number of directories seen, use opendir() to open the
-   * directory, and then use readdir() to loop through the entries
-   * and process them. You have to be careful not to process the
-   * "." and ".." directory entries, or you'll end up spinning in
-   * (infinite) loops. Also make sure you closedir() when you're done.
-   *
-   * You'll also want to use chdir() to move into this new directory,
-   * with a matching call to chdir() to move back out of it when you're
-   * done.
-   */
-}
+  // Increment directory count
+  ++num_dirs; 
+       
+  // Create dirent structure for the readdir() method
+  struct dirent *entry;
+  // Open the given director and instantiate the variable
+  DIR *dir;
+  dir = opendir(path);
+  // This our amazing way of skipping the first two entries
+  (entry = readdir(dir));
+  (entry = readdir(dir));
+
+  // In each recursive step, we want to hop into the directory that we are processing
+  chdir(path);
+  // This goes through each entry in the directory (minus the first two)
+    while ((entry = readdir(dir)) != NULL)
+      process_path(entry->d_name);
+  // Hop out of the current directory
+    chdir("..");
+  // Close the opened directory
+    closedir(dir);
+  }
 
 void process_file(const char* path) {
-  /*
-   * Update the number of regular files.
-   * This is as simple as it seems. :-)
-   */
-
-	++num_regular;
+  // Increment file count
+  ++num_regular;
 }
 
 void process_path(const char* path) {
