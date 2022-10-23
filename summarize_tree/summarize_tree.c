@@ -43,14 +43,17 @@ void process_directory(const char* path) {
   DIR *dir;
   dir = opendir(path);
   // This our amazing way of skipping the first two entries
-  (entry = readdir(dir));
-  (entry = readdir(dir));
+  // entry = readdir(dir);
+  // entry = readdir(dir);
 
   // In each recursive step, we want to hop into the directory that we are processing
-  chdir(path);
+    chdir(path);
   // This goes through each entry in the directory (minus the first two)
-    while ((entry = readdir(dir)) != NULL)
-      process_path(entry->d_name);
+    while ((entry = readdir(dir)) != NULL){
+      if(entry->d_name[0] != '.' && entry->d_name[1] != '.'){
+        process_path(entry->d_name);
+      }
+  }
   // Hop out of the current directory
     chdir("..");
   // Close the opened directory

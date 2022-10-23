@@ -13,7 +13,7 @@ static int num_dirs = 0;
 static int callback(const char *fpath, const struct stat *sb, int typeflag) {
     // Define stuff here
     
-  if (typeflag == 1) ++num_dirs;
+  if(typeflag == 1) ++num_dirs;
   if(typeflag == 0) ++num_files;
   
  
