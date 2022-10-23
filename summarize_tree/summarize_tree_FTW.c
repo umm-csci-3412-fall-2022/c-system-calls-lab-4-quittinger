@@ -31,8 +31,9 @@ if (argc != 2) {
 
    ftw(argv[1], callback, MAX_FTW_DEPTH);
 
-    printf("number of files: %d \n", num_files);
-    printf("number of directories: %d \n", num_dirs);
+    
+    printf("There were %d directories.\n", num_dirs);
+    printf("There were %d regular files.\n", num_files);
 
     
 }
