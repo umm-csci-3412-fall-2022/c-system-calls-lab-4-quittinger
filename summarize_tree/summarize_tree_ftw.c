@@ -11,8 +11,9 @@ static int num_files = 0;
 static int num_dirs = 0;
 
 static int callback(const char *fpath, const struct stat *sb, int typeflag) {
-    // Define stuff here
     
+  // When typeflag is one, it is a directory so we increment our count for directories
+  // and 0 means file, so we increment our count for files  
   if(typeflag == 1) ++num_dirs;
   if(typeflag == 0) ++num_files;
   
